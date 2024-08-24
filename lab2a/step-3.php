@@ -4,15 +4,24 @@ require "helpers/helper-functions.php";
 
 session_start();
 
-$birthdate = $_POST['birthdate'];
-$sex = $_POST['sex'];
-$address = $_POST['address'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $agree = isset($_POST['agree']) ? $_POST['agree'] : '';
 
-$_SESSION['birthdate'] = $birthdate;
-$_SESSION['sex'] = $sex;
-$_SESSION['address'] = $address;
+    if (empty($email) || empty($password) || empty($agree)) {
+        $_SESSION['error'] = 'All fields are required and you must agree to the terms.';
+        header('Location: step-3.php');
+        exit();
+    } else {
+        $_SESSION['email'] = $email;
+        $_SESSION['password'] = password_hash($password, PASSWORD_DEFAULT);
+        $_SESSION['agree'] = $agree;
+        header('Location: thank-you.php');
+        exit();
+    }
+}
 
-dump_session();
 ?>
 <html>
 <head>
@@ -32,23 +41,17 @@ dump_session();
         </h1>
       </div>
       <div class="p-section--shallow">
+        <?php if (isset($_SESSION['error'])): ?>
+            <p style="color: red;"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
+        <?php endif; ?>
 
-
-        <form action="thank-you.php" method="POST">
-
+        <form action="step-3.php" method="POST">
           <fieldset>
-            <label>Contact Number</label>
-            <input type="text" name="contact_number" placeholder="+639123456789" />
+            <label>Email address</label>
+            <input type="email" name="email" placeholder="example@canonical.com" autocomplete="email">
 
-            <label>Program</label>
-            <select name="program">
-              <option disabled="disabled" selected="">Select an option</option>
-              <option value="cs">Computer Science</option>
-              <option value="it">Information Technology</option>
-              <option value="is">Information Systems</option>
-              <option value="se">Software Engineering</option>
-              <option value="ds">Data Science</option>
-            </select>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="******" autocomplete="current-password">
 
             <label class="p-checkbox--inline">
             <input type="checkbox" name="agree">
@@ -60,10 +63,7 @@ dump_session();
 
             <button type="submit" class="p-button--positive">Finish</button>
           </fieldset>
-
         </form>
-
-
       </div>
 
     </div>

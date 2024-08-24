@@ -1,0 +1,26 @@
+body {
+    background-image: url('../img/ccs_bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white; /* Ensure text is visible on the background */
+    text-align: center; /* Center-align text */
+}
+h1, p {
+    color: white; /* Ensure headings and paragraph text are visible */
+}
+button {
+    padding: 10px 70px;
+    font-size: 25px;
+    background-color: white; /* White background for the button */
+    color: #b30801; /* Text color for the button */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative; /* Needed for positioning */
+    top: 50%; /* Move it down from the center */
+    transform: translateY(85%); /* Adjust this value to move the button slightly below the center */
+}
+button:hover {
+    background-color: #f0f0f0; /* Light grey on hover */
+}

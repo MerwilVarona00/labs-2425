@@ -4,26 +4,27 @@ require "helpers/helper-functions.php";
 
 session_start();
 
-$contact_number = $_POST['contact_number'];
-$program = $_POST['program'];
-$agree = $_POST['agree'];
+// Check if session variables are set before using them
+$fullname = isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'N/A';
+$birthdate = isset($_SESSION['birthdate']) ? $_SESSION['birthdate'] : 'N/A';
+$contact_number = isset($_SESSION['contact_number']) ? $_SESSION['contact_number'] : 'N/A';
+$sex = isset($_SESSION['sex']) ? $_SESSION['sex'] : 'N/A';
+$program = isset($_SESSION['program']) ? $_SESSION['program'] : 'N/A';
+$address = isset($_SESSION['address']) ? $_SESSION['address'] : 'N/A';
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : 'N/A';
+$agree = isset($_SESSION['agree']) ? $_SESSION['agree'] : 'N/A';
 
-$_SESSION['contact_number'] = $contact_number;
-$_SESSION['program'] = $program;
-$_SESSION['agree'] = $agree;
+// Calculate age based on birthdate
+$birthdate = date_create($birthdate);
+$today = date_create(date('Y-m-d'));
+$age = date_diff($today, $birthdate)->y;
 
-$form_data = $_SESSION;
 
-dump_session();
-
-session_destroy();
 ?>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>IPT10 Laboratory Activity #2</title>
-    <link rel="icon" href="https://phpsandbox.io/assets/img/brand/phpsandbox.png">
-    <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-4.15.0.min.css" />   
+    <title>Thank You</title>
 </head>
 <body>
 
@@ -31,36 +32,30 @@ session_destroy();
   <div class="row--50-50-on-large">
     <div class="col">
       <div class="p-section--shallow">
-        <h1>
-          Thank You Page
-        </h1>
+      <h1>
+      Registration Complete
+      </h1>
       </div>
       <div class="p-section--shallow">
-      
-        <table aria-label="Session Data">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            foreach ($form_data as $key => $val):
-            ?>
-                <tr>
-                    <th><?php echo $key; ?></th>
-                    <td>
-                      <?php echo $val; ?>
-                    </td>
-                </tr>
-            <?php
-            endforeach;
-            ?>
-            </tbody>
-        </table>
-      
+        <p>Thank you for registering, <?php echo htmlspecialchars($fullname); ?>.</p>
+        <p>Your details:</p>
+        <ul>
+            <li>Complete Name: <?php echo htmlspecialchars($fullname); ?></li>
+            <li>Birthdate: <?php echo $birthdate->format('F j, Y'); ?></li>
+            <li>Age: <?php echo $age; ?> years old</li>
+            <li>Contact Number: <?php echo htmlspecialchars($contact_number); ?></li>
+            <li>Sex: <?php echo htmlspecialchars($sex); ?></li>
+            <li>Program: <?php echo htmlspecialchars($program); ?></li>
+            <li>Complete Address: <?php echo htmlspecialchars($address); ?></li>
+            <li>Email: <?php echo htmlspecialchars($email); ?></li>
+            <li>Agreed to Terms: <?php echo $agree === 'on' ? 'Yes' : 'No'; ?></li>
+        </ul>
+      </div>
+    </div>
 
+    <div class="col">
+      <div class="p-image-container--3-2 is-cover">
+        <img class="p-image-container__image" src="https://www.auf.edu.ph/home/images/ittc.jpg" alt="">
       </div>
     </div>
   </div>
@@ -68,3 +63,8 @@ session_destroy();
 
 </body>
 </html>
+
+<?php
+session_unset();
+session_destroy();
+?>
